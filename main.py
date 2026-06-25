@@ -39,16 +39,13 @@ def shorten_url(request: ShortenRequest):
 
     if existing:
         conn.close()
-        return {"short_url": f"http://localhost:8000/{existing[0]}"}
-
+        return {"short_url": f"https://url-shortener-rt9y.onrender.com/{existing[0]}"}
     # Создаём новый короткий код
     short_code = generate_short_code()
     cursor.execute("INSERT INTO urls (short_code, long_url) VALUES (?, ?)", (short_code, request.url))
     conn.commit()
     conn.close()
-
-    return {"short_url": f"http://localhost:8000/{short_code}"}
-
+    return {"short_url": f"https://url-shortener-rt9y.onrender.com/{short_code}"}
 @app.get("/{short_code}")
 def redirect_to_url(short_code: str):
     conn = sqlite3.connect("urls.db")
