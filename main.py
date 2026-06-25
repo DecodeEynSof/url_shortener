@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
+from fastapi.responses import RedirectResponse
 import random
 import string
 import sqlite3
@@ -53,11 +54,11 @@ def redirect_to_url(short_code: str):
     cursor.execute("SELECT long_url FROM urls WHERE short_code = ?", (short_code,))
     result = cursor.fetchone()
     conn.close()
-
+    
     if not result:
         raise HTTPException(status_code=404, detail="Short URL not found")
-
-    return {"redirect_to": result[0]}
+    
+    return RedirectResponse(url=result[0])
 
 @app.get("/", response_class=HTMLResponse)
 def form():
